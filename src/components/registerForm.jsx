@@ -7,15 +7,23 @@ import auth from "../services/authService";
 class RegisterForm extends Form {
   state = {
     data: { username: "", password: "", name: "" },
-    errors: {},
+    errors: {}
   };
+
   schema = {
-    name: Joi.string().alphanum().min(3).max(30).required().label("Username"),
+    username: Joi.string()
+      .required()
+      .email()
+      .label("Username"),
     password: Joi.string()
-      .regex(/[a-zA-Z0-9]{5,30}/)
+      .required()
+      .min(5)
       .label("Password"),
-    username: Joi.string().email(),
+    name: Joi.string()
+      .required()
+      .label("Name")
   };
+
   doSubmit = async () => {
     try {
       const response = await userService.register(this.state.data);
@@ -29,9 +37,10 @@ class RegisterForm extends Form {
       }
     }
   };
+
   render() {
     return (
-      <div className='container'>
+      <div>
         <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
